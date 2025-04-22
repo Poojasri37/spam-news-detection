@@ -16,33 +16,49 @@ pipeline {
 
         stage('Run Script') {
             steps {
-                sh 'python your_main_script.py' // Replace with your actual Python script
+                sh 'python main.py'  // replace with actual entry point script
             }
         }
 
         stage('Test (optional)') {
             steps {
-                sh 'pytest tests/' // if you have tests
+                sh 'pytest tests/'  // only if tests folder exists
             }
         }
-post {
-    success {
-        emailext(
-            to: 'your-email@gmail.com',
-            subject: "Build Success: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-            body: "Good job!\n\nCheck build log at ${env.BUILD_URL}",
-            attachLog: true
-        )
     }
-    failure {
-        emailext(
-            to: 'your-email@gmail.com',
-            subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-            body: "Something went wrong.\n\nCheck log at ${env.BUILD_URL}",
-            attachLog: true
-        )
-    }
-}
 
+    post {
+        success {
+            emailext(
+                to: 'your-email@gmail.com',  // replace with your real email
+                subject: "✅ Build Success: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """
+                Good job! 🎉
+
+                Project: ${env.JOB_NAME}
+                Build Number: ${env.BUILD_NUMBER}
+                Build URL: ${env.BUILD_URL}
+
+                Check console output for details.
+                """,
+                attachLog: true
+            )
+        }
+        failure {
+            emailext(
+                to: 'your-email@gmail.com',  // replace with your real email
+                subject: "❌ Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """
+                Oops! Something went wrong. 😞
+
+                Project: ${env.JOB_NAME}
+                Build Number: ${env.BUILD_NUMBER}
+                Build URL: ${env.BUILD_URL}
+
+                Please check the log for errors.
+                """,
+                attachLog: true
+            )
+        }
     }
 }
