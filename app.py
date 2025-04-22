@@ -27,4 +27,3 @@ if st.button("Classify"):
         st.success(f'The news is classified as: {result}')
     else:
         st.warning("Please enter some text to classify.")
-return none
