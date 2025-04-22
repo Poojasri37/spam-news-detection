@@ -25,5 +25,24 @@ pipeline {
                 sh 'pytest tests/' // if you have tests
             }
         }
+post {
+    success {
+        emailext(
+            to: 'your-email@gmail.com',
+            subject: "Build Success: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+            body: "Good job!\n\nCheck build log at ${env.BUILD_URL}",
+            attachLog: true
+        )
+    }
+    failure {
+        emailext(
+            to: 'your-email@gmail.com',
+            subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+            body: "Something went wrong.\n\nCheck log at ${env.BUILD_URL}",
+            attachLog: true
+        )
+    }
+}
+
     }
 }
